@@ -26,6 +26,12 @@ count_pomodoro_day = 0
 start = False
 break_time = 0
 
+count_pomodoro25_day = 0
+count_pomodoro50_day = 0
+select_time25 = 0
+select_time50 = 0
+
+
 # Font:
 # 01: Create Font
 font = pygame.font.SysFont('san', 50)
@@ -35,9 +41,10 @@ text_3 = font.render('-m', True, BLACK)
 text_4 = font.render('-s', True, BLACK)
 text_5 = font.render('Start', True, BLACK)
 text_6 = font.render('Reset', True, BLACK)
-text_7 = font.render('25 min', True, BLACK)
-
+text_70 = font.render('25 min', True, BLACK)
+text_71 = font.render('50 min', True, BLACK)
 text_8 = font.render('BREAK TIME 5 MINUTES', True, GREEN)
+
 
 
 
@@ -85,9 +92,13 @@ while True:
     if (300 < mouse_x < 450) and (200 < mouse_y < 250): # Reset
         pygame.draw.rect(screen, WHITE1, (300, 200, 150, 50))
 
-    pygame.draw.rect(screen, WHITE, (100, 260, 120, 40)) # 25 minute
-    if (100 < mouse_x < 220) and (260 < mouse_y < 300):
-        pygame.draw.rect(screen, WHITE1, (100, 260, 120, 40))
+    pygame.draw.rect(screen, WHITE, (10, 5, 120, 40)) # 25 minute
+    if (10 < mouse_x < 130) and (5 < mouse_y < 45):
+        pygame.draw.rect(screen, WHITE1, (10, 5, 120, 40))
+
+    pygame.draw.rect(screen, WHITE, (140, 5, 120, 40)) # 50 minute
+    if (140 < mouse_x < 260) and (5 < mouse_y < 45):
+        pygame.draw.rect(screen, WHITE1, (140, 5, 120, 40))
 
 
 
@@ -100,7 +111,8 @@ while True:
     screen.blit(text_5, (300, 50))
     screen.blit(text_6, (300, 200))
 
-    screen.blit(text_7, (100, 260))
+    screen.blit(text_70, (15, 5))
+    screen.blit(text_71, (150, 5))
     #Draw cirle
     pygame.draw.circle(screen, BLACK, (250, 400), 100)
     pygame.draw.circle(screen, WHITE, (250, 400), 95)
@@ -124,41 +136,52 @@ while True:
         #Press mounse on the area
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                if (100 < mouse_x < 220) and (260 < mouse_y < 300): # 25
+                if (10 < mouse_x < 130) and (5 < mouse_y < 45): # mouse move to 25 minutes
                     print("press + 25minute")
                     total_secs = 25 * 60
                     total = total_secs
+                    select_time25 = 1
+                    select_time50 = 0
+                    text_8 = font.render('BREAK TIME 5 MINUTES', True, GREEN)
 
-                if (100 < mouse_x < 150) and (50 < mouse_y < 100): # + minute
+                if (140 < mouse_x < 260) and (5 < mouse_y < 45): # mouse move to 50 minutes
+                    print("press + 50minute")
+                    total_secs = 50 * 60
+                    total = total_secs
+                    select_time25 = 0
+                    select_time50 = 1
+                    text_8 = font.render('BREAK TIME 10 MINUTES', True, GREEN)
+
+                if (100 < mouse_x < 150) and (50 < mouse_y < 100): # mouse move to + minute
                     print("press +minute")
                     total_secs += 60
                     total = total_secs
 
-                if (200 < mouse_x < 250) and (50 < mouse_y < 100): # - second
+                if (200 < mouse_x < 250) and (50 < mouse_y < 100): # mouse move to - second
                     print("press +second")
                     total_secs += 1
                     total = total_secs
 
             
-                if (100 < mouse_x < 150) and (200 < mouse_y < 250): # - minute
+                if (100 < mouse_x < 150) and (200 < mouse_y < 250): # mouse move to - minute
                     print("press -minutes")
                     total_secs -= 60
                     total = total_secs
                 
                 
-                if (200 < mouse_x < 250) and (200 < mouse_y < 250): # - second
+                if (200 < mouse_x < 250) and (200 < mouse_y < 250): # mouse move to - second
                     print("press -second")
                     total_secs -= 1
                     total = total_secs
 
             
-                if (300 < mouse_x < 450) and (50 < mouse_y < 100): # Start
+                if (300 < mouse_x < 450) and (50 < mouse_y < 100): # mouse move to Start
                     print("press Start")
                     start = True
                     total = total_secs
 
                 
-                if (300 < mouse_x < 450) and (200 < mouse_y < 250): # Reset
+                if (300 < mouse_x < 450) and (200 < mouse_y < 250): # mouse move to Reset
                     print("press Reset")
                     total_secs = 0
                     total = total_secs
@@ -173,13 +196,18 @@ while True:
     if start:
         total_secs -= 1
         pygame.mixer.Sound.play(sound_tick_tock)
-        
+
         #Version 1.0.0.1
         time.sleep(1)
         if total_secs == 0 and break_time == 0:
             pygame.mixer.Sound.play(sound)
             break_time = 1
-            total_secs = 300
+
+            if select_time25 == 1:
+                total_secs = 300
+            if select_time50 == 1:
+                total_secs = 600
+
             total = total_secs
          
             
@@ -189,10 +217,15 @@ while True:
             break_time = 0
             total_secs = 0
             start = False
-            count_pomodoro_day += 1
+            if select_time25 == 1:
+                count_pomodoro25_day += 1
+            if select_time50 == 1:
+                count_pomodoro50_day += 1
+
+            # count_pomodoro_day += 1
 
         if total_secs != 0 and break_time == 1:
-            screen.blit(text_8, (50, 400))
+            screen.blit(text_8, (50, 395))
             
 
         if total_secs < 0:
@@ -235,10 +268,13 @@ while True:
     
 
 
-    font1 = pygame.font.SysFont(str(count_pomodoro_day), 80)
-    text_9 = font1.render(str(count_pomodoro_day), True, GREEN)
-    screen.blit(text_9, (235, 430))
+    font10 = pygame.font.SysFont(str(count_pomodoro_day), 50)
+    text_90 = font10.render('P25: ' + str(count_pomodoro25_day), True, GREEN)
+    screen.blit(text_90, (200, 350))
 
+    font11 = pygame.font.SysFont(str(count_pomodoro_day), 50)
+    text_91 = font11.render('P50: ' + str(count_pomodoro50_day), True, GREEN)
+    screen.blit(text_91, (200, 430))
 
 
 
