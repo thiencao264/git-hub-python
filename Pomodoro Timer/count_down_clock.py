@@ -1,7 +1,7 @@
-# Timer Clock Version 1.0.0.1
+# Timer Clock Version 1.0.0.2
 #Change:
-#1. change volume the tick_tock_sound
-#2. Change the timer steps to 1s
+#1. add 50 minites option and break time is 10 minutes
+#2. Change the behavior for, notification with the new feature.
 
 
 
@@ -186,7 +186,8 @@ while True:
                     total_secs = 0
                     total = total_secs
                     start = False
-                    count_pomodoro_day = 0
+                    count_pomodoro25_day = 0
+                    count_pomodoro50_day = 0
                 
 
 
