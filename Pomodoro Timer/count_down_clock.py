@@ -1,4 +1,8 @@
-# Timer Clock Version 1.0.0
+# Timer Clock Version 1.0.0.1
+#Change:
+#1. change volume the tick_tock_sound
+#2. Change the timer steps to 1s
+
 
 
 import pygame
@@ -43,7 +47,9 @@ text_8 = font.render('BREAK TIME 5 MINUTES', True, GREEN)
 
 # Add sound
 sound = pygame.mixer.Sound('Alarm.wav')
+
 sound_tick_tock = pygame.mixer.Sound('Clock-sound-tick-tock2.wav')
+sound_tick_tock.set_volume(0.1) #Version 1.0.0.1
     
 clock = pygame.time.Clock() #blink 60 times per second
 while True:
@@ -167,7 +173,9 @@ while True:
     if start:
         total_secs -= 1
         pygame.mixer.Sound.play(sound_tick_tock)
-        time.sleep(0.03)
+        
+        #Version 1.0.0.1
+        time.sleep(1)
         if total_secs == 0 and break_time == 0:
             pygame.mixer.Sound.play(sound)
             break_time = 1
