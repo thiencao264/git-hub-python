@@ -3,13 +3,16 @@
 #1. add 50 minites option and break time is 10 minutes
 #2. Change the behavior for, notification with the new feature.
 
-
-
-import pygame
+from datetime import datetime
 import time
+import pygame
+import pygame.font
 import math
+import csv
 
 pygame.init()
+pygame.font.init()
+
 screen = pygame.display.set_mode((500, 600))
 
 GREY = (120, 120, 120)
@@ -34,7 +37,7 @@ select_time50 = 0
 
 # Font:
 # 01: Create Font
-font = pygame.font.SysFont('san', 50)
+font = pygame.font.SysFont('san', 45)
 text_1 = font.render('+m', True, BLACK)
 text_2 = font.render('+s', True, BLACK)
 text_3 = font.render('-m', True, BLACK)
@@ -57,8 +60,9 @@ sound = pygame.mixer.Sound('Alarm.wav')
 
 sound_tick_tock = pygame.mixer.Sound('Clock-sound-tick-tock2.wav')
 sound_tick_tock.set_volume(0.1) #Version 1.0.0.1
-    
+
 clock = pygame.time.Clock() #blink 60 times per second
+
 while True:
     clock.tick(60) #blink 60 times per second
 
@@ -130,7 +134,14 @@ while True:
 
     # Press to Quit game
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or datetime.now().hour == 00:
+            with open('monthly_scores_tracker.txt', 'a+') as monthlyFile:
+                with open ('daily_scores_tracker.txt', 'r') as dailyFile:
+                    for line in dailyFile:
+                        monthlyFile.write('\n')
+                        monthlyFile.write(line)    
+
+
             pygame.quit()
 
         #Press mounse on the area
@@ -199,7 +210,7 @@ while True:
         pygame.mixer.Sound.play(sound_tick_tock)
 
         #Version 1.0.0.1
-        time.sleep(1)
+        time.sleep(0.01)
         if total_secs == 0 and break_time == 0:
             pygame.mixer.Sound.play(sound)
             break_time = 1
@@ -210,12 +221,13 @@ while True:
                 total_secs = 600
 
             total = total_secs
+            
          
             
 
         if total_secs == 0 and break_time == 1:
             pygame.mixer.Sound.play(sound)
-            break_time = 0
+            
             total_secs = 0
             start = False
             if select_time25 == 1:
@@ -223,7 +235,12 @@ while True:
             if select_time50 == 1:
                 count_pomodoro50_day += 1
 
+            # Write the value to file each time have the changing
+            with open('daily_scores_tracker.txt', 'wt') as outputFileWrite:
+                outputFileWrite.write(str(datetime.now()) + '     25 minutes: '+ str(count_pomodoro25_day) + '     50 minutes: '+str(count_pomodoro50_day))
+
             # count_pomodoro_day += 1
+            break_time = 0
 
         if total_secs != 0 and break_time == 1:
             screen.blit(text_8, (50, 395))
@@ -269,11 +286,11 @@ while True:
     
 
 
-    font10 = pygame.font.SysFont(str(count_pomodoro_day), 50)
+    font10 = pygame.font.Font(None, 50)
     text_90 = font10.render('P25: ' + str(count_pomodoro25_day), True, GREEN)
     screen.blit(text_90, (200, 350))
 
-    font11 = pygame.font.SysFont(str(count_pomodoro_day), 50)
+    font11 = pygame.font.Font(None, 50)
     text_91 = font11.render('P50: ' + str(count_pomodoro50_day), True, GREEN)
     screen.blit(text_91, (200, 430))
 
