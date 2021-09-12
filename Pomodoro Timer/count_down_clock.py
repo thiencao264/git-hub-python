@@ -1,7 +1,7 @@
-# Timer Clock Version 1.0.0.2
+# Timer Pomodoro Clock Version 1.0.0.3
 #Change:
-#1. add 50 minites option and break time is 10 minutes
-#2. Change the behavior for, notification with the new feature.
+#1. Update the tracer for counting Pomodoro25 and Pomodoro 50 minutes to daily_scores.tracker.txt file
+#2. Update the monthly tracker to file for the end of day or whenever you close the app.
 
 from datetime import datetime
 import time
@@ -210,7 +210,7 @@ while True:
         pygame.mixer.Sound.play(sound_tick_tock)
 
         #Version 1.0.0.1
-        time.sleep(0.01)
+        time.sleep(1)
         if total_secs == 0 and break_time == 0:
             pygame.mixer.Sound.play(sound)
             break_time = 1
